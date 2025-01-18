@@ -1,1 +1,1 @@
-# device-management-admin
+# app-device-admin
