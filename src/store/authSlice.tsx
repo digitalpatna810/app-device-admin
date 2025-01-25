@@ -30,6 +30,22 @@ interface ProfileError {
   message: string;
 }
 
+interface Contact {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+}
+
+interface ContactsResponse {
+  contacts: Contact[];
+}
+
+interface ProfileError {
+  message: string;
+}
+
+
 interface ProfileResponse {
   admin: {
     _id: string;
@@ -47,7 +63,7 @@ interface ProfileResponse {
     __v: number;
   };
 }
-const BASE_URL = "http://13.126.47.200:5000"
+const BASE_URL = "http://15.206.162.217:5000"
 // Async thunk for sign-in
 export const signIn = createAsyncThunk<
   SignInResponse,
@@ -86,6 +102,8 @@ export const fetchUsers = createAsyncThunk<
         Authorization: `Bearer ${token}`,
       },
     });
+    console.log("response userrrrrrr", response.data);  // Debugging: Check the response data
+
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
@@ -117,12 +135,37 @@ export const fetchProfile = createAsyncThunk<
   }
 });
 
+
+export const fetchContacts = createAsyncThunk<
+  ContactsResponse,
+  { token: string },
+  { rejectValue: ProfileError }
+>('auth/fetchContacts', async ({ token }, { rejectWithValue }) => {
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/api/allContacts`, // Assuming this is the correct endpoint for contacts
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;  // Ensure this is correct structure
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data || { message: 'Failed to fetch contacts' }
+    );
+  }
+});
+
+
 // Define the auth state
 interface AuthState {
   token: string | null;
   user: any | null;
   users: User[];
   profile: ProfileResponse | null;
+  contacts: Contact[];
   loading: boolean;
   error: string | null;
   isAuthenticated?: boolean;
@@ -134,6 +177,7 @@ const initialState: AuthState = {
   user: JSON.parse(localStorage.getItem('user') || 'null'),
   users: [],
   profile: null,
+  contacts: [],
   loading: false,
   error: null,
   isAuthenticated: !!localStorage.getItem('token'),
@@ -198,7 +242,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.loading = false;
-        state.users = action.payload.users;
+        state.users = action.payload.users || action.payload;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
@@ -218,6 +262,22 @@ const authSlice = createSlice({
       .addCase(fetchProfile.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || 'Failed to fetch profile';
+      });
+    // Handle fetchContacts actions
+    builder
+      .addCase(fetchContacts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchContacts.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log("action.payload.contacts", action.payload)
+        state.contacts = action.payload.contacts || action.payload;  // Update contacts with fetched data
+        state.error = null;
+      })
+      .addCase(fetchContacts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || 'Failed to fetch contacts';
       });
   },
 });

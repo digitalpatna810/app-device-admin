@@ -117,7 +117,7 @@ function App() {
         element={
           <>
             <DefaultLayout>
-              <PageTitle title="Form Elements | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Form Elements | Admin - Tailwind CSS Admin Dashboard Template" />
               <FormElements />
             </DefaultLayout>
           </>
@@ -128,7 +128,7 @@ function App() {
         element={
           <>
             <DefaultLayout>
-              <PageTitle title="Form Layout | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Form Layout | Admin - Tailwind CSS Admin Dashboard Template" />
               <FormLayout />
             </DefaultLayout>
           </>
@@ -139,7 +139,7 @@ function App() {
         element={
           <>
             <DefaultLayout>
-              <PageTitle title="Tables | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Tables | Admin - Tailwind CSS Admin Dashboard Template" />
               <Tables />
             </DefaultLayout>
           </>
@@ -183,7 +183,7 @@ function App() {
         element={
           <>
             <DefaultLayout>
-              <PageTitle title="Buttons | TailAdmin - Tailwind CSS Admin Dashboard Template" />
+              <PageTitle title="Buttons | Admin - Tailwind CSS Admin Dashboard Template" />
               <Buttons />
             </DefaultLayout>
           </>

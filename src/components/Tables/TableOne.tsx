@@ -80,7 +80,7 @@ const TableOne = () => {
         <div className="grid grid-cols-3 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-5">
           <div className="p-2.5 xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Source
+              Name
             </h5>
           </div>
           <div className="p-2.5 text-center xl:p-5">
@@ -90,22 +90,22 @@ const TableOne = () => {
           </div>
           <div className="p-2.5 text-center xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Revenues
+            Phone Number
             </h5>
           </div>
           <div className="hidden p-2.5 text-center sm:block xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Sales
+            Role
             </h5>
           </div>
           <div className="hidden p-2.5 text-center sm:block xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
-              Conversion
+            deviceId
             </h5>
           </div>
         </div>
 
-        {users?.map((user: any, index: number) => (
+        {users?.data?.map((user: any, index: number) => (
           <div
             className={`grid grid-cols-3 sm:grid-cols-5 ${
               index === users.length - 1
@@ -115,11 +115,22 @@ const TableOne = () => {
             key={user._id}
           >
             <div className="flex items-center gap-3 p-2.5 xl:p-5">
-              <p className="text-black dark:text-white">{user.firstName}</p>
+              <p className="text-black dark:text-white">{user.firstName +" "+ user.lastName}</p>
             </div>
 
             <div className="flex items-center justify-start p-2.5 xl:p-5">
               <p className="text-black text-sm dark:text-white">{user.email}</p>
+            </div>
+
+            <div className="flex items-center justify-start p-2.5 xl:p-5">
+              <p className="text-black text-sm dark:text-white">{user.phoneNumber}</p>
+            </div>
+
+            <div className="flex items-center justify-start p-2.5 xl:p-5">
+              <p className="text-black text-sm dark:text-white">{user.role}</p>
+            </div>
+            <div className="flex items-center justify-start p-2.5 xl:p-5">
+              <p className="text-black text-sm dark:text-white">{user.deviceId}</p>
             </div>
 
           </div>

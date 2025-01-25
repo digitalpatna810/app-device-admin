@@ -4,6 +4,8 @@ import ProductTwo from '../../images/product/product-02.png';
 import ProductThree from '../../images/product/product-03.png';
 import ProductFour from '../../images/product/product-04.png';
 import * as React from 'react';
+import { fetchContacts } from '../../store/authSlice'; // Path to your authSlice file
+import { useDispatch, useSelector } from 'react-redux';
 
 const productData: Product[] = [
   {
@@ -41,22 +43,42 @@ const productData: Product[] = [
 ];
 
 const TableTwo = () => {
+
+  const dispatch = useDispatch();
+  
+  // Accessing state from Redux store
+  const { contacts, loading, error, token } = useSelector((state: any) => state.auth);
+  // Fetch contacts on component mount
+  React.useEffect(() => {
+    if (token) {
+      dispatch(fetchContacts({ token })); // Dispatch the fetchContacts action if token exists
+    }
+  }, [dispatch, token]);
+
+  // Loading and Error handling
+  if (loading) return <p>Loading contacts...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  // If no contacts are available, show a message
+  if (contacts === 0) return <p>No contacts available</p>;
+
+  console.log("contacts@@@",contacts)
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="py-6 px-4 md:px-6 xl:px-7.5">
         <h4 className="text-xl font-semibold text-black dark:text-white">
-          Top Products
+          Contacts logs
         </h4>
       </div>
 
       <div className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
         <div className="col-span-3 flex items-center">
-          <p className="font-medium">Product Name</p>
+          <p className="font-medium">Contact Name</p>
         </div>
         <div className="col-span-2 hidden items-center sm:flex">
-          <p className="font-medium">Category</p>
+          <p className="font-medium">Contact Number</p>
         </div>
-        <div className="col-span-1 flex items-center">
+        {/* <div className="col-span-1 flex items-center">
           <p className="font-medium">Price</p>
         </div>
         <div className="col-span-1 flex items-center">
@@ -64,30 +86,28 @@ const TableTwo = () => {
         </div>
         <div className="col-span-1 flex items-center">
           <p className="font-medium">Profit</p>
-        </div>
+        </div> */}
       </div>
 
-      {productData.map((product, key) => (
+      {contacts?.data?.map((product, key) => (
         <div
           className="grid grid-cols-6 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
           key={key}
         >
           <div className="col-span-3 flex items-center">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <div className="h-12.5 w-15 rounded-md">
-                <img src={product.image} alt="Product" />
-              </div>
+              
               <p className="text-sm text-black dark:text-white">
-                {product.name}
+                {product.contactName}
               </p>
             </div>
           </div>
           <div className="col-span-2 hidden items-center sm:flex">
             <p className="text-sm text-black dark:text-white">
-              {product.category}
+              {product.contactNumber}
             </p>
           </div>
-          <div className="col-span-1 flex items-center">
+          {/* <div className="col-span-1 flex items-center">
             <p className="text-sm text-black dark:text-white">
               ${product.price}
             </p>
@@ -97,7 +117,7 @@ const TableTwo = () => {
           </div>
           <div className="col-span-1 flex items-center">
             <p className="text-sm text-meta-3">${product.profit}</p>
-          </div>
+          </div> */}
         </div>
       ))}
     </div>
