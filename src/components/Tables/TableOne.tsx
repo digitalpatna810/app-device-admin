@@ -14,42 +14,42 @@ const brandData: BRAND[] = [
   {
     logo: BrandOne,
     name: 'Aman',
-    visitors: 3.5,
-    revenues: '5,768',
-    sales: 590,
-    conversion: 4.8,
+    email: "test1@gmail.com",
+    numbers: 2131231231,
+    role: "User",
+    deviceId: 487878,
   },
   {
-    logo: BrandTwo,
-    name: 'Ankit',
-    visitors: 2.2,
-    revenues: '4,635',
-    sales: 467,
-    conversion: 4.3,
+    logo: BrandOne,
+    name: 'Anshu',
+    email: "test541@gmail.com",
+    numbers: 2131631231,
+    role: "Student",
+    deviceId: 487878,
   },
   {
-    logo: BrandThree,
-    name: 'Kumar',
-    visitors: 2.1,
-    revenues: '4,290',
-    sales: 420,
-    conversion: 3.7,
+    logo: BrandOne,
+    name: 'Mukesh',
+    email: "mukesh@gmail.com",
+    numbers: 2131201231,
+    role: "Student",
+    deviceId: 487878,
   },
   {
-    logo: BrandFour,
-    name: 'Nobby',
-    visitors: 1.5,
-    revenues: '3,580',
-    sales: 389,
-    conversion: 2.5,
+    logo: BrandOne,
+    name: 'Moksh',
+    email: "moksh@gmail.com",
+    numbers: 2131231231,
+    role: "User",
+    deviceId: 487878,
   },
   {
-    logo: BrandFive,
-    name: 'Ajay',
-    visitors: 3.5,
-    revenues: '6,768',
-    sales: 390,
-    conversion: 4.2,
+    logo: BrandOne,
+    name: 'Kishan',
+    email: "kishan@gmail.com",
+    numbers: 2131231231,
+    role: "Founder",
+    deviceId: 487878,
   },
 ];
 
@@ -105,30 +105,37 @@ const TableOne = () => {
           </div>
         </div>
 
-        {users?.data?.map((user: any, index: number) => (
+        {brandData?.map((user: any, index: number) => (
           <div
             className={`grid grid-cols-3 sm:grid-cols-5 ${
-              index === users.length - 1
+              index === brandData.length - 1
                 ? ''
                 : 'border-b border-stroke dark:border-strokedark'
             }`}
             key={user._id}
           >
             <div className="flex items-center gap-3 p-2.5 xl:p-5">
-              <p className="text-black dark:text-white">{user.firstName +" "+ user.lastName}</p>
+            <p className="text-black dark:text-white">{user.name}</p>
+              {/* <p className="text-black dark:text-white">{user.firstName +" "+ user.lastName}</p> */}
             </div>
+
 
             <div className="flex items-center justify-start p-2.5 xl:p-5">
               <p className="text-black text-sm dark:text-white">{user.email}</p>
             </div>
 
+
             <div className="flex items-center justify-start p-2.5 xl:p-5">
-              <p className="text-black text-sm dark:text-white">{user.phoneNumber}</p>
+              <p className="text-black text-sm dark:text-white">{user.numbers}</p>
             </div>
 
             <div className="flex items-center justify-start p-2.5 xl:p-5">
               <p className="text-black text-sm dark:text-white">{user.role}</p>
             </div>
+
+            {/* <div className="flex items-center justify-start p-2.5 xl:p-5">
+              <p className="text-black text-sm dark:text-white">{user.role}</p>
+            </div> */}
             <div className="flex items-center justify-start p-2.5 xl:p-5">
               <p className="text-black text-sm dark:text-white">{user.deviceId}</p>
             </div>

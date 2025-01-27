@@ -15,14 +15,14 @@ const DropdownUser = () => {
 
     const handleSignOut = () => {
       // Clear local storage
-      // localStorage.removeItem('token');
-      // localStorage.removeItem('user');
-
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.reload();
       // Dispatch Redux action to clear token and user from the store
       // dispatch(signOutAction());
 
       // Redirect to sign-in page
-      navigate('/auth/signin');
+      // navigate('/auth/signin');
     };
 
     return handleSignOut;

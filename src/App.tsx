@@ -34,19 +34,19 @@ function App() {
     setTimeout(() => setLoading(false), 1000);
   }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
     
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
+  //   const storedToken = localStorage.getItem('token');
+  //   const storedUser = localStorage.getItem('user');
 
-    if (storedToken && storedUser) {
+  //   if (storedToken && storedUser) {
     
-      dispatch(setToken(storedToken));
-      dispatch(setUser(JSON.parse(storedUser)));
-    } else {
-      navigate('/auth/signin');
-    }
-  }, [dispatch, navigate]);
+  //     dispatch(setToken(storedToken));
+  //     dispatch(setUser(JSON.parse(storedUser)));
+  //   } else {
+  //     navigate('/auth/signin');
+  //   }
+  // }, [dispatch, navigate]);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -61,18 +61,39 @@ function App() {
     }
   }, [pathname,token, navigate]);
   
-  
-  // Redirect based on token presence
   useEffect(() => {
-    if (!token && pathname !== '/auth/signin' && pathname !== '/auth/signup') {
-      navigate('/auth/signin');
-    } else if (
-      token &&
-      (pathname === '/auth/signin' || pathname === '/auth/signup')
-    ) {
-      navigate('/dashboard');
+    const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+  
+    if (storedToken && storedUser) {
+      // Dispatch token and user data to Redux
+      dispatch(setToken(storedToken));
+      // dispatch(setUser(JSON.parse(storedUser)));
+  
+      // Redirect authenticated users to the dashboard
+      if (pathname === '/auth/signin' || pathname === '/auth/signup') {
+        navigate('/dashboard');
+      }
+    } else {
+      // Redirect unauthenticated users to sign-in
+      if (pathname !== '/auth/signin' && pathname !== '/auth/signup') {
+        navigate('/auth/signin');
+      }
     }
-  }, [token, pathname, navigate]);
+  }, [dispatch, navigate, pathname]);
+
+  
+  // // Redirect based on token presence
+  // useEffect(() => {
+  //   if (!token && pathname !== '/auth/signin' && pathname !== '/auth/signup') {
+  //     navigate('/auth/signin');
+  //   } else if (
+  //     token &&
+  //     (pathname === '/auth/signin' || pathname === '/auth/signup')
+  //   ) {
+  //     navigate('/dashboard');
+  //   }
+  // }, [token, pathname, navigate]);
 
   return loading ? (
     <Loader />
