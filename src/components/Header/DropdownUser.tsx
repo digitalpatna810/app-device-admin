@@ -18,6 +18,7 @@ const DropdownUser = () => {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.reload();
+      history.push('/auth/signin');
       // Dispatch Redux action to clear token and user from the store
       // dispatch(signOutAction());
 
