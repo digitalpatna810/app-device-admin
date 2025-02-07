@@ -1,32 +1,34 @@
-import Breadcrumb from '../components/Breadcrumbs/Breadcrumb';
-import CoverOne from '../images/cover/cover-01.png';
-import userSix from '../images/user/user-06.png';
-import { Link } from 'react-router-dom';
-import * as React from 'react';
-import { fetchProfile } from '../store/authSlice';
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch, RootState } from '../store/Store';
+import Breadcrumb from "../components/Breadcrumbs/Breadcrumb";
+import CoverOne from "../images/cover/cover-01.png";
+import userSix from "../images/user/user-06.png";
+import { Link } from "react-router-dom";
+import * as React from "react";
+import { fetchProfile } from "../store/authSlice";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../store/Store";
 
 const Profile = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { profile, loading, error } = useSelector(
+    (state: RootState) => state.auth
+  );
+  console.log(profile);
+  const admin = profile?.admin;
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log(token);
+    if (token) {
+      dispatch(fetchProfile({ token }));
+    }
+  }, [dispatch]);
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
-  // const dispatch = useDispatch<AppDispatch>();
-  // const { profile, loading, error } = useSelector((state: RootState) => state.auth);
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   if (token) {
-  //     dispatch(fetchProfile({ token }));
-  //   }
-  // }, [dispatch]);
-
-  // if (loading) {
-  //   return <p>Loading...</p>;
-  // }
-
-  // if (error) {
-  //   return <p>Error: {error}</p>;
-  // }
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   return (
     <>
@@ -34,7 +36,6 @@ const Profile = () => {
 
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="relative z-20 h-35 md:h-65">
-          
           <img
             src={CoverOne}
             alt="profile cover"
@@ -112,11 +113,14 @@ const Profile = () => {
             </div>
           </div>
           <div className="mt-4">
-          {/* {profile && (
+            {/* {profile && (
             <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
             {profile.admin.firstName} {profile.admin.lastName}
             </h3>
           )} */}
+            <p className="font-medium text-slate-800">
+              {admin?.firstName + " " + admin?.lastName}
+            </p>
             <p className="font-medium">Ui/Ux Designer</p>
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-94 grid-cols-3 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
               <div className="flex flex-col items-center justify-center gap-1 border-r border-stroke px-4 dark:border-strokedark xsm:flex-row">

@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 
 interface User {
   id: string;
@@ -45,7 +45,6 @@ interface ProfileError {
   message: string;
 }
 
-
 interface ProfileResponse {
   admin: {
     _id: string;
@@ -63,28 +62,26 @@ interface ProfileResponse {
     __v: number;
   };
 }
-const BASE_URL = "http://15.206.162.217:5000"
+const BASE_URL = "http://15.206.162.217:5000";
 // Async thunk for sign-in
 export const signIn = createAsyncThunk<
   SignInResponse,
   { email: string; password: string },
   { rejectValue: SignInError }
->('auth/signIn', async (formData, { rejectWithValue }) => {
+>("auth/signIn", async (formData, { rejectWithValue }) => {
   try {
-    const response = await axios.post(
-      `${BASE_URL}/api/admin/login`,
-      formData
-    );
-
+    console.log(formData);
+    const response = await axios.post(`${BASE_URL}/api/admin/login`, formData);
+    console.log(response);
     const { token, data: user } = response.data;
 
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(user));
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
 
     return { token, user };
   } catch (error: any) {
     return rejectWithValue(
-      error.response?.data || { message: 'Unknown error occurred' }
+      error.response?.data || { message: "Unknown error occurred" }
     );
   }
 });
@@ -94,7 +91,7 @@ export const fetchUsers = createAsyncThunk<
   UserListResponse,
   { token: string; userId: string },
   { rejectValue: UserListError }
->('auth/fetchUsers', async ({ token, userId }, { rejectWithValue }) => {
+>("auth/fetchUsers", async ({ token, userId }, { rejectWithValue }) => {
   try {
     const response = await axios.get(`${BASE_URL}/api/admin/users`, {
       params: { user_id: userId },
@@ -102,12 +99,12 @@ export const fetchUsers = createAsyncThunk<
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("response userrrrrrr", response.data);  // Debugging: Check the response data
+    console.log("response userrrrrrr", response.data); // Debugging: Check the response data
 
-    return response.data;
+    return response.data.data;
   } catch (error: any) {
     return rejectWithValue(
-      error.response?.data || { message: 'Failed to fetch users' }
+      error.response?.data || { message: "Failed to fetch users" }
     );
   }
 });
@@ -117,30 +114,29 @@ export const fetchProfile = createAsyncThunk<
   ProfileResponse,
   { token: string },
   { rejectValue: ProfileError }
->('auth/fetchProfile', async ({ token }, { rejectWithValue }) => {
+>("auth/fetchProfile", async ({ token }, { rejectWithValue }) => {
   try {
-    const response = await axios.get(
-      `${BASE_URL}/api/admin/profile`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    console.log(token);
+    const response = await axios.get(`${BASE_URL}/api/admin/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(response);
     return response.data;
   } catch (error: any) {
+    console.log(error.response?.data);
     return rejectWithValue(
-      error.response?.data || { message: 'Failed to fetch profile' }
+      error.response?.data || { message: "Failed to fetch profile" }
     );
   }
 });
-
 
 export const fetchContacts = createAsyncThunk<
   ContactsResponse,
   { token: string },
   { rejectValue: ProfileError }
->('auth/fetchContacts', async ({ token }, { rejectWithValue }) => {
+>("auth/fetchContacts", async ({ token }, { rejectWithValue }) => {
   try {
     const response = await axios.get(
       `${BASE_URL}/api/allContacts`, // Assuming this is the correct endpoint for contacts
@@ -150,14 +146,13 @@ export const fetchContacts = createAsyncThunk<
         },
       }
     );
-    return response.data;  // Ensure this is correct structure
+    return response.data; // Ensure this is correct structure
   } catch (error: any) {
     return rejectWithValue(
-      error.response?.data || { message: 'Failed to fetch contacts' }
+      error.response?.data || { message: "Failed to fetch contacts" }
     );
   }
 });
-
 
 // Define the auth state
 interface AuthState {
@@ -173,19 +168,19 @@ interface AuthState {
 
 // Initial state
 const initialState: AuthState = {
-  token: localStorage.getItem('token') || null,
-  user: JSON.parse(localStorage.getItem('user') || 'null'),
+  token: localStorage.getItem("token") || null,
+  user: JSON.parse(localStorage.getItem("user") || "null"),
   users: [],
   profile: null,
   contacts: [],
   loading: false,
   error: null,
-  isAuthenticated: !!localStorage.getItem('token'),
+  isAuthenticated: !!localStorage.getItem("token"),
 };
 
 // Create the slice
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     setToken: (state, action) => {
@@ -200,8 +195,8 @@ const authSlice = createSlice({
       state.profile = null;
       state.users = [];
       state.error = null;
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     },
     setAuth(state, action: PayloadAction<{ token: string; user: any }>) {
       state.token = action.payload.token;
@@ -212,8 +207,8 @@ const authSlice = createSlice({
       state.token = null;
       state.user = null;
       state.isAuthenticated = false;
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     },
   },
   extraReducers: (builder) => {
@@ -231,7 +226,7 @@ const authSlice = createSlice({
       })
       .addCase(signIn.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Sign-in failed';
+        state.error = action.payload?.message || "Sign-in failed";
       });
 
     // Handle fetchUsers actions
@@ -246,7 +241,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Failed to fetch users';
+        state.error = action.payload?.message || "Failed to fetch users";
       });
 
     // Handle fetchProfile actions
@@ -261,7 +256,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchProfile.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Failed to fetch profile';
+        state.error = action.payload?.message || "Failed to fetch profile";
       });
     // Handle fetchContacts actions
     builder
@@ -271,17 +266,18 @@ const authSlice = createSlice({
       })
       .addCase(fetchContacts.fulfilled, (state, action) => {
         state.loading = false;
-        console.log("action.payload.contacts", action.payload)
-        state.contacts = action.payload.contacts || action.payload;  // Update contacts with fetched data
+        console.log("action.payload.contacts", action.payload);
+        state.contacts = action.payload.contacts || action.payload; // Update contacts with fetched data
         state.error = null;
       })
       .addCase(fetchContacts.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload?.message || 'Failed to fetch contacts';
+        state.error = action.payload?.message || "Failed to fetch contacts";
       });
   },
 });
 
-export const { setToken, setUser, signOut, setAuth, clearAuth } = authSlice.actions;
+export const { setToken, setUser, signOut, setAuth, clearAuth } =
+  authSlice.actions;
 
 export default authSlice.reducer;
