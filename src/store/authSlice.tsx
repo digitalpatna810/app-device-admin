@@ -36,11 +36,31 @@ interface Contact {
   phone: string;
   email: string;
 }
-
+interface Contact {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+}
+interface Location {
+  _id: string;
+  deviceId: string;
+  locations: {
+    latitude: number;
+    longitude: number;
+    timestamp: string;
+    _id: string;
+  }[];
+}
 interface ContactsResponse {
   contacts: Contact[];
 }
-
+interface LocationsResponse {
+  data: Location[];
+}
+interface LocationError {
+  message: string;
+}
 interface ProfileError {
   message: string;
 }
@@ -153,6 +173,24 @@ export const fetchContacts = createAsyncThunk<
     );
   }
 });
+export const fetchLocation = createAsyncThunk<
+  LocationsResponse,
+  { token: string },
+  { rejectValue: LocationError }
+>("auth/fetchLocation", async ({ token }, { rejectWithValue }) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/api/all-location`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data || { message: "Failed to fetch locations" }
+    );
+  }
+});
 
 // Define the auth state
 interface AuthState {
@@ -161,6 +199,7 @@ interface AuthState {
   users: User[];
   profile: ProfileResponse | null;
   contacts: Contact[];
+  locations: Location[];
   loading: boolean;
   error: string | null;
   isAuthenticated?: boolean;
@@ -173,6 +212,7 @@ const initialState: AuthState = {
   users: [],
   profile: null,
   contacts: [],
+  locations: [],
   loading: false,
   error: null,
   isAuthenticated: !!localStorage.getItem("token"),
@@ -273,6 +313,21 @@ const authSlice = createSlice({
       .addCase(fetchContacts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload?.message || "Failed to fetch contacts";
+      });
+    // Handle fetchLocations actions
+    builder
+      .addCase(fetchLocation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchLocation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.locations = action.payload.data;
+        state.error = null;
+      })
+      .addCase(fetchLocation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload?.message || "Failed to fetch locations";
       });
   },
 });
