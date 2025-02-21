@@ -82,7 +82,7 @@ interface ProfileResponse {
     __v: number;
   };
 }
-const BASE_URL = "http://15.206.162.217:5000";
+const BASE_URL = "https://goteacher.in";
 // Async thunk for sign-in
 export const signIn = createAsyncThunk<
   SignInResponse,
