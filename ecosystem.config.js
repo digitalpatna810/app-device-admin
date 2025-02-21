@@ -1,7 +1,7 @@
 module.exports = {
     apps: [
       {
-        name: "device-manager-backend",
+        name: "device-manager-admin",
         script: "src/main.tsx",
         watch: "true",
         interpreter: "ts-node", // Use ts-node as the interpreter
